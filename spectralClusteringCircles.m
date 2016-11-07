@@ -1,4 +1,4 @@
-imreadfunction myscript(k, sigma, circles)
+function myscript(k, sigma)
 	% construct similarity matrix
 	digits(10)
 
@@ -24,25 +24,12 @@ imreadfunction myscript(k, sigma, circles)
 	% Function that calculates the similarity between two values
 	function out = constructSimilarityMatrix(A, sigma)
 		out = [length(A), length(A)];
-		if circles == 1
-			for i=1:length(A(1,:))
-				for j=i:length(A(1,:))
-					%disp(string('A(:,i)') + string(A(:,1)))
-					%disp(string('A(:,j)') + string(A(:,1)))
-					%disp(string(i) + string(', ') + string(j))
-					out(i,j) = findSimilarity(A(:,i), A(:,j), sigma);
-					out(j,i) = out(i,j);
-				end
-			end
-		else
-			%out = squareform(pdist(A))
-			%A = reshape(A, 1, []);
-			size(A)
-			out = pdist2(A', A');
+
+		size(A)
+		out = pdist2(A', A');
 
 
-			input('enter to continue')
-		end
+		input('enter to continue')
 		%out = squareform(pdist(A'))
 
 	end
@@ -65,7 +52,7 @@ imreadfunction myscript(k, sigma, circles)
 	    D = constructDiagMatrix(A);
 		L = D - A;
 		%L = D^(-.5)*L*D^(-.5)
-(		[eigvec, eigval] = eig(L)
+		[eigvec, eigval] = eig(L)
 		eigveck = eigvec(:, 1:k)
 				
 		S = kmeans(eigveck, k);
