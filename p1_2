@@ -1,0 +1,76 @@
+%%% Set the precision to 100 or else at the end you will be comparing 0 with 0
+digits(100)
+
+
+
+%%% Load the training data file and strip out the features and classes
+file = load('spam_train.data');
+x = data(:, 1:57);
+y = data(:, 58);
+
+
+
+%%% Seperate the data by classes and count the amount of each class
+x0 = zeros(1,57);
+x1 = zeros(1,57);
+
+if y(i,58) == 0
+	z += 1;
+	x0 = [x0; x(i,:)];
+else
+	o += 1;
+	x1 = [x1; x(i,:)];
+
+
+
+%%% Calculate probabilities of each class
+op = o / (o + z);
+disp(string("Class 0 probability ") + zp)
+zp = z / (o + z);
+disp(string("Class 1 probability ") + op)
+
+
+
+%%% Calculate the mean and std of each feature according to its class
+% Skip the first vector because it was all 0's from the matrix constuction
+mean0 = mean(x0(2:end,:));
+std0 = std(x0(2:end,:));
+mean1 = mean(x1(2:end,:));
+std1 = std(x1(2:end,:));
+
+
+%%% Load the test data file and strip out the features and classes
+testdata = load('spam_test.data');
+testx = testdata(:, 1:57);
+testy = testdata(:, 58);
+
+
+
+%%% Use the mean and std from the training set to calculate the test set probabilities
+omatrix = zeros(1, 57);
+zmatrix = zeros(1, 57);
+for j = 1:length(testdata)
+for i = 1:57
+zarray(i) = normpdf(testx(j,i), mean0(i), std0(i));
+oarray(i) = normpdf(testx(j,i), mean1(i), std1(i));
+end
+zmatrix = [zmatrix; zarray];
+omatrix = [omatrix; oarray];
+end
+
+
+
+%%% Calculate the final compounded probability for each data point
+% We can ignore the denominator of the Bayes formula because it is effectively a constant
+% Again shave the first data point off because it was all 0's from the matrix construction
+ofinal = zeros(1,57);
+zfinal = zeros(1,57);
+for i=2:length(omatrix)
+zfinal(i) = prod(zmatrix(i,:)) * zp;
+ofinal(i) = prod(omatrix(i,:)) * op;
+end
+
+
+% 1.5114e-06
+zfinal(i)
+ofinal(i)
